@@ -42,9 +42,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
  * |      |  -   |  4   |  5   |  6   |  =   |-------.    ,-------|      |RCTRL |RSHIFT| RALT | RGUI |      |
  * |------+------+-------------+------+------|       |    |       |------+------+------+------+------+------|
- * |      |  :   |  1   |  2   |  3   |  /   |-------|    |-------|      |      |      |      |      |      |
+ * |      |      |  1   |  2   |  3   |  /   |-------|    |-------|      |      |      |      |      |      |
  * `-----------------------------------------/      /     \      \-----------------------------------------'
- *                  |      |  .   |   0   | /      /       \       \ |      |      |      |
+ *                  |      |      |   0   | /  .   /       \       \ |      |      |      |
  *                  |      |      |       |/      /         \      \ |      |      |      |
  *                  `----------------------------'           '------''--------------------'
  */
@@ -82,7 +82,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * ,-----------------------------------------.                    ,-----------------------------------------.
  * |      |      |      |      |      |      |                    |      |      |      |      |      |      |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
- * |      |      |      |      |      |      |                    | PRV  |VOLDW |VOLUP | NXT  |      |      |
+ * |      |      |      |      |      |      |                    | PRV  |VOLDW |VOLUP | NXT  | ST/OP|      |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
  * |      | LGUI | LAlt |LSHIFT| LCTRL|      |-------.    ,-------| Left | Down |  Up  |Right | TAB  |      |
  * |------+------+------+------+------+------|       |    |       |------+------+------+------+------+------|
@@ -95,7 +95,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_NAV] = LAYOUT(
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT, XXXXXXX, XXXXXXX,
+  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT, KC_MPLY, XXXXXXX,
   XXXXXXX, KC_LGUI, KC_LALT, KC_LSFT, KC_LCTL, XXXXXXX,                   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_TAB,  XXXXXXX,
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_HOME, KC_PGDN, KC_PGUP, KC_END,  XXXXXXX, XXXXXXX,
                              XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
