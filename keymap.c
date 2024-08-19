@@ -15,34 +15,34 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * ,-----------------------------------------.                     ,-----------------------------------------.
  * |      |      |      |      |      |      |                     |      |      |      |      |      |      |
  * |------+------+------+------+------+------|                     |------+------+------+------+------+------|
- * |      |   Q  |   W  |   E  |   R  |   T  |                     |   Y  |   U  |   I  |   O  |   P  |  -   |
+ * | TAB  |   Q  |   W  |   E  |   R  |   T  |                     |   Y  |   U  |   I  |   O  |   P  |  -   |
  * |------+------+------+------+------+------|                     |------+------+------+------+------+------|
  * |LCTRL |   A  |   S  |   D  |   F  |   G  |--------.    ,-------|   H  |   J  |   K  |   L  |   ;  |  '   |
  * |------+------+------+------+------+------| GAMING |    |       |------+------+------+------+------+------|
  * |LShift|   Z  |   X  |   C  |   V  |   B  |--------|    |-------|   N  |   M  |   ,  |   .  |   /  |RShift|
  * `----------------------------------------- /       /     \      \-----------------------------------------'
- *                   | LAlt | Tab  | Space | /  ESC  /       \Enter \ |BackSP|Delete|      |
- *                   |      |      |       |/  NAV /         \ NUM  \ |SYM   | FUN  | RGUI |
+ *                   |      |      | Space | /       /       \Enter \ |BackSP|Delete|      |
+ *                   |      | LALT |       |/  NAV /         \ NUM  \ |SYM   | FUN  | RGUI |
  *                   `----------------------------'           '------''--------------------'
  */
 
  [_QWERTY] = LAYOUT(
   XXXXXXX,              XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-  XXXXXXX,              KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                     KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_MINS,
+  KC_TAB,               KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                     KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_MINS,
   LCTL_T(KC_ESC),       KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                     KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
   KC_LSFT,              KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,TG(_GAMING), XXXXXXX,KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,  KC_RSFT,
-                 XXXXXXX,   KC_LALT,  KC_SPC,LT(_NAV, KC_TAB),        LT(_NUM, KC_ENT), LT(_SYM, KC_BSPC),  LT(_FUN, KC_DEL),  KC_RGUI
+                     XXXXXXX, KC_LALT,  KC_SPC,   MO(_NAV),            LT(_NUM, KC_ENT), LT(_SYM, KC_BSPC),  LT(_FUN, KC_DEL),  KC_RGUI
 ),
 
 /* NUM
  * ,-----------------------------------------.                    ,-----------------------------------------.
  * |      |      |      |      |      |      |                    |      |      |      |      |      |      |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
- * |      |  *   |  7   |  8   |  9   |  +   |                    |      |      |      |      |      |      |
+ * |      |      |  7   |  8   |  9   |  -   |                    |      |      |      |      |      |      |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
- * |      |  -   |  4   |  5   |  6   |  =   |-------.    ,-------|      |RCTRL |RSHIFT| RALT | RGUI |      |
+ * |      |  =   |  4   |  5   |  6   |  +   |-------.    ,-------|      |RCTRL |RSHIFT| RALT | RGUI |      |
  * |------+------+-------------+------+------|       |    |       |------+------+------+------+------+------|
- * |      |      |  1   |  2   |  3   |  /   |-------|    |-------|      |      |      |      |      |      |
+ * |      |  *   |  1   |  2   |  3   |  /   |-------|    |-------|      |      |      |      |      |      |
  * `-----------------------------------------/      /     \      \-----------------------------------------'
  *                  |      |      |   0   | /  .   /       \       \ |      |      |      |
  *                  |      |      |       |/      /         \      \ |      |      |      |
@@ -50,10 +50,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [_NUM] = LAYOUT(
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-  XXXXXXX, KC_ASTR, KC_7,    KC_8,    KC_9,    KC_PLUS,                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-  XXXXXXX, KC_MINS, KC_4,    KC_5,    KC_6,    KC_EQL,                    XXXXXXX, KC_RCTL, KC_RSFT, KC_RALT, KC_RGUI, XXXXXXX,
-  XXXXXXX, XXXXXXX, KC_1,    KC_2,    KC_3,    KC_SLSH, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-                             XXXXXXX, XXXXXXX, KC_0,    KC_DOT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
+  XXXXXXX, XXXXXXX, KC_7,    KC_8,    KC_9,    KC_MINS,                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+  XXXXXXX, KC_EQL,  KC_4,    KC_5,    KC_6,    KC_PLUS,                   XXXXXXX, KC_RCTL, KC_RSFT, KC_RALT, KC_RGUI, XXXXXXX,
+  XXXXXXX, KC_ASTR, KC_1,    KC_2,    KC_3,    KC_SLSH, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+                             XXXXXXX, XXXXXXX, KC_0,    KC_DOT,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
 ),
 
 /* SYM
