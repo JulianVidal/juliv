@@ -13,25 +13,25 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /* QWERTY
  * ,-----------------------------------------.                     ,-----------------------------------------.
- * |      |      |      |      |      |      |                     |      |      |      |      |      |      |
+ * |      |      |      | BRIU | BRID |      |                     | PRV  |VOLDW |VOLUP | NXT  | ST/OP|      |
  * |------+------+------+------+------+------|                     |------+------+------+------+------+------|
  * | TAB  |   Q  |   W  |   E  |   R  |   T  |                     |   Y  |   U  |   I  |   O  |   P  |  -   |
  * |------+------+------+------+------+------|                     |------+------+------+------+------+------|
  * |LCTRL |   A  |   S  |   D  |   F  |   G  |--------.    ,-------|   H  |   J  |   K  |   L  |   ;  |  '   |
  * |------+------+------+------+------+------| GAMING |    |       |------+------+------+------+------+------|
  * |LShift|   Z  |   X  |   C  |   V  |   B  |--------|    |-------|   N  |   M  |   ,  |   .  |   /  |RShift|
- * `----------------------------------------- /       /     \      \-----------------------------------------'
- *                   |      |      | Space | /       /       \Enter \ |BackSP|Delete|      |
+ * `----------------------------------------- /      /     \      \ -----------------------------------------'
+ *                   |      |      | Space | / TAB  /       \Enter \ |BackSP|Delete|      |
  *                   |      | LALT |       |/  NAV /         \ NUM  \ |SYM   | FUN  | RGUI |
  *                   `----------------------------'           '------''--------------------'
  */
 
  [_QWERTY] = LAYOUT(
-  XXXXXXX,              XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-  KC_TAB,               KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                     KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_MINS,
-  LCTL_T(KC_ESC),       KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                     KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
-  KC_LSFT,              KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,TG(_GAMING), XXXXXXX,KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,  KC_RSFT,
-                     XXXXXXX, KC_LALT,  KC_SPC,   MO(_NAV),            LT(_NUM, KC_ENT), LT(_SYM, KC_BSPC),  LT(_FUN, KC_DEL),  KC_RGUI
+  XXXXXXX,        XXXXXXX, XXXXXXX, KC_BRIU, KC_BRID, XXXXXXX,                  KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT, KC_MPLY, XXXXXXX,
+  KC_TAB,         KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                     KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_MINS,
+  LCTL_T(KC_ESC), KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                     KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
+  KC_LSFT,        KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,TG(_GAMING), XXXXXXX,KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,  KC_RSFT,
+            XXXXXXX, KC_LALT,  KC_SPC,   LT(_NAV, KC_TAB),         LT(_NUM, KC_ENT), LT(_SYM, KC_BSPC),  LT(_FUN, KC_DEL),  KC_RGUI
 ),
 
 /* NUM
@@ -133,8 +133,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------| QWERTY|    |       |------+------+------+------+------+------|
  * |LShift|   Z  |   X  |   C  |   V  |   B  |-------|    |-------|   N  |   M  |   ,  |   .  |   /  |RShift|
  * `-----------------------------------------/       /     \      \-----------------------------------------'
- *                   | LAlt | LGUI |Space | /  ESC  /       \Enter \  |      |BackSP| RGUI |
- *                   |      |      |      |/       /         \      \ |      |      |      |
+ *                   |      |      |Space | /       /       \Enter \  |      |BackSP| RGUI |
+ *                   |      | LAlt |      |/       /         \      \ |      |      |      |
  *                   `----------------------------'           '------''--------------------'
  */
 
@@ -143,7 +143,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TAB,   KC_Q,   KC_W,    KC_E,    KC_R,    KC_T,                     KC_Y,    KC_U,    KC_I,    KC_UP,   KC_P,    KC_MINS,
   KC_LCTL,  KC_A,   KC_S,    KC_D,    KC_F,    KC_G,                     KC_H,    KC_J,    KC_LEFT, KC_DOWN, KC_RGHT, KC_QUOT,
   KC_LSFT,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,   TG(_GAMING),KC_NO,KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
-                             KC_LALT, KC_LGUI, KC_SPC, KC_ESC,   KC_ENT, KC_BSPC, KC_DEL, KC_RGUI
+                             XXXXXXX, KC_LALT, KC_SPC, XXXXXXX,   KC_ENT, KC_BSPC, KC_DEL, KC_RGUI
 ),
 };
 
