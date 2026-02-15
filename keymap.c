@@ -1,4 +1,8 @@
 #include QMK_KEYBOARD_H
+#ifdef OLED_ENABLE
+#  include "oled_master.h"
+#  include "oled_slave.h"
+#endif
 
 enum layer_number {
   _QWERTY = 0,
@@ -8,6 +12,16 @@ enum layer_number {
   _FUN,
   _GAMING,
 };
+
+// Custom keycodes for independent RGB control
+enum custom_keycodes {
+  RGB_UGL = SAFE_RANGE,  // Toggle underglow only
+  RGB_KEY,               // Toggle per-key only
+};
+
+// Track RGB state
+static bool underglow_enabled = true;
+static bool perkey_enabled = true;
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -21,8 +35,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------| GAMING |    |       |------+------+------+------+------+------|
  * |LShift|   Z  |   X  |   C  |   V  |   B  |--------|    |-------|   N  |   M  |   ,  |   .  |   /  |RShift|
  * `----------------------------------------- /      /     \      \ -----------------------------------------'
- *                   |      |      | Space | / TAB  /       \Enter \ |BackSP|Delete|      |
- *                   |      | LALT |       |/  NAV /         \ NUM  \ |SYM   | FUN  | RGUI |
+ *                   | LGUI | LALT | Space | / TAB  /       \Enter \  |BackSP|Delete| RGUI |
+ *                   |      |      |       |/  NAV /         \ NUM  \ | SYM  | FUN  | RGUI |
  *                   `----------------------------'           '------''--------------------'
  */
 
@@ -31,7 +45,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TAB,         KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                     KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_MINS,
   LCTL_T(KC_ESC), KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                     KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
   KC_LSFT,        KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,TG(_GAMING), XXXXXXX,KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,  KC_RSFT,
-            XXXXXXX, KC_LALT,  KC_SPC,   LT(_NAV, KC_TAB),         LT(_NUM, KC_ENT), LT(_SYM, KC_BSPC),  LT(_FUN, KC_DEL),  KC_RGUI
+            KC_LGUI, KC_LALT,  KC_SPC,   LT(_NAV, KC_TAB),         LT(_NUM, KC_ENT), LT(_SYM, KC_BSPC),  LT(_FUN, KC_DEL),  KC_RGUI
 ),
 
 /* NUM
@@ -66,7 +80,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|       |    |       |------+------+------+------+------+------|
  * |LSHIFT|  ^   |  _   |  *   |  \   |  /   |-------|    |-------|  ~   |  $   |  {   |  }   |  @   |      |
  * `-----------------------------------------/       /     \      \-----------------------------------------'
- *                  |      |      |       | /      /       \       \ |      |      |      |
+ *                  |      |      | Space | /      /       \       \ |      |      |      |
  *                  |      |      |       |/      /         \      \ |      |      |      |
  *                   `----------------------------'           '------''--------------------'
  */
@@ -75,7 +89,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   XXXXXXX, KC_QUOT, KC_LABK, KC_RABK, KC_DQUO, KC_DOT,                    KC_AMPR, KC_GRV,  KC_LBRC, KC_RBRC, KC_PERC, XXXXXXX,
   KC_LCTL, KC_EXLM, KC_MINS, KC_PLUS, KC_EQL,  KC_HASH,                   KC_PIPE, KC_COLN, KC_LPRN, KC_RPRN, KC_QUES, XXXXXXX,
   KC_LSFT, KC_CIRC, KC_UNDS, KC_ASTR, KC_BSLS, KC_SLSH, XXXXXXX, XXXXXXX, KC_TILD, KC_DLR, KC_LCBR, KC_RCBR,  KC_AT,   XXXXXXX,
-                             XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
+                             XXXXXXX, XXXXXXX, KC_SPC,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
   ),
 
 /* NAV
@@ -103,23 +117,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /* FUN
  * ,-----------------------------------------.                    ,-----------------------------------------.
- * |      |      |      |      |      |      |                    |      |      |      |      |      |      |
+ * |      |RGBUGL|RGBKEY|      |      |      |                    |RMTOGG|RMNEXT|RMPREV|RM HU+|RM HD-|      |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
  * |      |      |  F7  |  F8  |  F9  | F12  |                    |      |      |      |      |      |      |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
  * |      |      |  F4  |  F5  |  F6  | F11  |-------.    ,-------|      |RCTRL |RSHIFT| LALT | RGUI |      |
  * |------+------+------+------+------+------|       |    |       |------+------+------+------+------+------|
- * |      |      |  F1  |  F2  |  F3  | F10  |-------|    |-------|      |      |      |      |      |      |
+ * |      |      |  F1  |  F2  |  F3  | F10  |-------|    |-------|RM SA+|RM SA-|RM VA+|RM VA-|RM SP+|RM SP-|
  * `-----------------------------------------/      /     \      \-----------------------------------------'
  *                  |      |      |       | /      /       \       \ |      |      |      |
  *                  |      |      |       |/      /         \      \ |      |      |      |
  *                  `----------------------------'           '------''--------------------'
  */
 [_FUN] = LAYOUT(
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+  XXXXXXX, RGB_UGL, RGB_KEY, XXXXXXX, XXXXXXX, XXXXXXX,                   RM_TOGG, RM_NEXT, RM_PREV, RM_HUEU, RM_HUED, XXXXXXX,
   XXXXXXX, XXXXXXX, KC_F7,   KC_F8,   KC_F9,   KC_F12,                    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   XXXXXXX, XXXXXXX, KC_F4,   KC_F5,   KC_F6,   KC_F11,                    XXXXXXX, KC_RCTL, KC_RSFT, KC_LALT, KC_RGUI, XXXXXXX,
-  XXXXXXX, XXXXXXX, KC_F1,   KC_F2,   KC_F3,   KC_F10,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+  XXXXXXX, XXXXXXX, KC_F1,   KC_F2,   KC_F3,   KC_F10,  XXXXXXX, XXXXXXX, RM_SATU, RM_SATD, RM_VALU, RM_VALD, RM_SPDU, RM_SPDD,
                              XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
 ),
 
@@ -147,49 +161,55 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 };
 
-//SSD1306 OLED update loop, make sure to enable OLED_ENABLE=yes in rules.mk
+// OLED Display Configuration
 #ifdef OLED_ENABLE
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-  if (!is_keyboard_master())
-    return OLED_ROTATION_180;  // flips the display 180 degrees if offhand
-  return rotation;
+  if (is_keyboard_master()) {
+    return OLED_ROTATION_270;  // Vertical display for master (left)
+  }
+  return rotation;  // Default rotation for slave (right)
 }
-
-// When you add source files to SRC in rules.mk, you can use functions.
-const char *read_layer_state(void);
-const char *read_logo(void);
-void set_keylog(uint16_t keycode, keyrecord_t *record);
-const char *read_keylog(void);
-const char *read_keylogs(void);
-
-// const char *read_mode_icon(bool swap);
-// const char *read_host_led_state(void);
-// void set_timelog(void);
-// const char *read_timelog(void);
 
 bool oled_task_user(void) {
   if (is_keyboard_master()) {
-    // If you want to change the display of OLED, you need to change here
-    oled_write_ln(read_layer_state(), false);
-    oled_write_ln(read_keylog(), false);
-    oled_write_ln(read_keylogs(), false);
-    //oled_write_ln(read_mode_icon(keymap_config.swap_lalt_lgui), false);
-    //oled_write_ln(read_host_led_state(), false);
-    //oled_write_ln(read_timelog(), false);
+    oled_render_master();     // Render master side display
   } else {
-    oled_write(read_logo(), false);
+    // Only render when OLED is on - prevents animation from keeping screen awake
+    if (is_oled_on()) {
+      oled_render_slave();
+    }
   }
-    return false;
+  return false;
 }
+
 #endif // OLED_ENABLE
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   if (record->event.pressed) {
 #ifdef OLED_ENABLE
-    set_keylog(keycode, record);
+    set_last_key(keycode, record);  // Track last keycode for OLED
 #endif
     // set_timelog();
   }
+
+#ifdef RGB_MATRIX_ENABLE
+  switch (keycode) {
+    case RGB_UGL:  // Toggle underglow only
+      if (record->event.pressed) {
+        underglow_enabled = !underglow_enabled;
+        rgb_matrix_set_flags(underglow_enabled ? LED_FLAG_ALL : (LED_FLAG_KEYLIGHT | LED_FLAG_MODIFIER));
+      }
+      return false;
+
+    case RGB_KEY:  // Toggle per-key only
+      if (record->event.pressed) {
+        perkey_enabled = !perkey_enabled;
+        rgb_matrix_set_flags(perkey_enabled ? LED_FLAG_ALL : LED_FLAG_UNDERGLOW);
+      }
+      return false;
+  }
+#endif
+
   return true;
 }
